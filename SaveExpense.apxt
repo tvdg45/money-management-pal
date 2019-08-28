@@ -1,0 +1,30 @@
+trigger SaveExpense on Expense__c (after update, after delete) {
+    
+    if (Trigger.isAfter) {
+
+        //After an expense is updated, update related transaction.
+        if (Trigger.isUpdate) {
+            
+        	SaveExpense saveExpense = new SaveExpense();
+        
+        	saveExpense.action = 'update';
+        	saveExpense.allExpenses = Trigger.new;
+        
+        	Id batchId = Database.executeBatch(saveExpense);
+        
+        	System.debug('Update transaction: ' + batchId);
+        }
+        
+        //After an expense is deleted, delete related transaction.
+    	if (Trigger.isDelete) {
+        
+        	SaveExpense saveExpense = new SaveExpense();
+        
+        	saveExpense.action = 'delete';
+        
+        	Id batchId = Database.executeBatch(saveExpense);
+		
+			System.debug('Delete transaction: ' + batchId);        
+    	}        
+    }
+}
