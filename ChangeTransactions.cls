@@ -32,8 +32,8 @@ global class ChangeTransactions implements Schedulable {
     public static void deleteDeposits() {
         
         integer recordCount = 0;
-        
-		List<Deposit__c> depositsToBeDeleted = new List<Deposit__c>();
+	    
+	List<Deposit__c> depositsToBeDeleted = new List<Deposit__c>();
         
         for (Deposit__c eachDeposit: [SELECT Name FROM Deposit__c WHERE OwnerId IN :allRecordOwners]) {
             
