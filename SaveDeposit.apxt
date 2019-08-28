@@ -1,0 +1,30 @@
+trigger SaveDeposit on Deposit__c (after update, after delete) {
+
+    if (Trigger.isAfter) {
+
+    	//After a deposit is updated, update related transaction.
+    	if (Trigger.isUpdate) {
+        
+        	SaveDeposit saveDeposit = new SaveDeposit();
+        
+        	saveDeposit.action = 'update';
+        	saveDeposit.allDeposits = Trigger.new;
+        
+        	Id batchId = Database.executeBatch(saveDeposit);
+        
+        	System.debug('Update transaction: ' + batchId);
+    	}
+    
+    	//After a deposit is deleted, delete related transaction.
+    	if (Trigger.isDelete) {
+        
+        	SaveDeposit saveDeposit = new SaveDeposit();
+        
+        	saveDeposit.action = 'delete';
+        
+        	Id batchId = Database.executeBatch(saveDeposit);
+		
+			System.debug('Delete transaction: ' + batchId);        
+    	}        
+    }
+}
